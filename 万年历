@@ -1,0 +1,90 @@
+package com.wang.demo;
+import java.util.Scanner;
+
+
+public class Wannianli {
+	public static void main(String[] args) {
+	Scanner input = new Scanner(System.in);
+	boolean isTrue = false;//是否为闰年，设初始为false(平年)
+	System.out.println("请输入年份：");
+	int year = input.nextInt();//年份
+	System.out.println("请输入月份：");
+	int month = input.nextInt();//月份
+	int days = 0;//声明变量，存放每个月的天数
+	int totalDays = 0;//声明变量，存放距离1990/1/1的天数
+	if((year%400==0)||(year%4==0&&year%100!=0)) {
+		System.out.println(year+"是闰年，一年有366天");
+		isTrue = true;//isTrue变为true
+	}
+	else {
+		System.out.println(year+"不是闰年，一年有365天");
+	}
+	
+	//计算年的总天数
+	for(int i=1900;i<=year;i++) {
+		if((i%400==0)||(i%4==0&&i%100!=0)) {
+			totalDays = totalDays + 366;//闰年+366
+		}
+		else {
+			totalDays = totalDays + 365;//闰年+365
+		}
+	}
+	
+	//计算本年到本月的总天数
+	for(int i=1;i<=month;i++) {
+		switch(i) {
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:days = 31;
+		        //System.out.println(i+"月有"+days+"天");
+		        break;
+		case 4:
+		case 6:
+		case 9:
+		case 11:days = 30;
+		        //System.out.println(i+"月有"+days+"天");
+	            break;
+		case 2:if((i%400==0)||(i%4==0&&i%100!=0)) {
+			   days = 29;
+			//System.out.println(i+"月有"+days+"天");
+			}else {
+				days = 28;
+				//System.out.println(i+"月有"+days+"天");
+			}
+		     break;
+		     
+		default:System.out.println("你输入的月份错误！");
+		}
+		if(i!=month) {
+			totalDays += days;
+		}
+	}
+	
+	//计算星期几
+	int beforeDays = 1 + totalDays%7;
+	if(beforeDays==7) {
+		beforeDays=0;
+	}
+	System.out.println("星期日\t星期一\t星期二\t星期三\t星期四\t星期五\t星期六\t");
+	
+	//先打印\t,从星期几开始
+	for(int i=0;i<beforeDays;i++) {
+		System.out.print("\t");
+	}
+	
+	//打印本月
+	for(int i=1;i<=days;i++) {
+		System.out.print(i+"\t");
+		//7个换行
+		if((i+beforeDays)%7==0)
+		{
+			System.out.println();
+		}
+	}
+	
+	}
+}
