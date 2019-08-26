@@ -1,0 +1,211 @@
+package game;
+import java.util.Random;
+import java.util.Scanner;
+
+public class FingeGuess {
+	public static void main(String[] args) {
+		int userNumber = 20;//用户注册的用户名，最多20个
+		String[] Name = new String[userNumber];//声明一个字符串数组，可以存放用户注册的用户名，最多20个
+		int sub = 0;//第几个注册的用户
+		String[] opponent = {"刘备","关羽","张飞"};//声明 并一个字符串数组，存放对手
+		String[] type = {"石头","布","剪刀"};
+		int[] score = new int[userNumber];//声明数组，存放分数
+		Scanner input = new Scanner(System.in);
+		Random random = new Random();
+		boolean isopen = true;//主菜单
+		while(isopen==true) {//在isopen==true主菜单一直处于运行状态
+			System.out.println();
+			System.out.println(" |=====================================|");
+			System.out.println(" |            欢迎来到猜拳游戏                                           |");
+			System.out.println(" |-------------------------------------|");
+			System.out.println(" |               1.注册                                                    |");
+			System.out.println(" |-------------------------------------|");
+			System.out.println(" |               2.登录                                                    |");
+			System.out.println(" |-------------------------------------|");
+			System.out.println(" |               3.比赛规则                                            |");
+			System.out.println(" |-------------------------------------|");
+			System.out.println(" |               0.退出                                                    |");
+			System.out.println(" |=====================================|");
+			System.out.print("请选择你要操作的功能序号：");
+			int select1 = input.nextInt();//从键盘输入数字，运行主菜单的选项
+			///////////////////////////
+			switch(select1) {
+			///////////////////////////////////////////////////////////注册
+			case 1:
+				System.out.println("请输入用户名：");
+				String userName = input.next();//从键盘输入用户名
+				
+				//第一个注册的用户，不用判断重复重名
+				if(Name[0]==null) {
+				Name[0] = userName;//把该用户名保存到数组Name中
+				sub++;//第一个不用比较是否有重名的，直接插入在Name[0]；注册sub=1,
+				System.out.println("注册成功");	
+				}
+				
+				//不是第一个注册的需要判断和之前的是否有重名的
+				else if(Name[0]!=null) {
+					boolean flag = false;//定义一个boolean的判断变量,默认false
+					
+					/////////////////遍历查找是否有重名的,如果有，则flag = true
+					for(int i=0;i<sub;i++) {
+						if(Name[i].equals(userName)) {
+							flag = true;//找到了用户名一样的
+							}
+						}
+					
+					//如果flag==false说明没找到，注册用户名可以插入
+					if(flag==false) {
+						Name[sub] = userName;//把该用户名保存到数组Name中
+						sub++;//插入成功后，sub+1
+						System.out.println("注册成功");
+						}
+					else {//否则说明找到，不能插入，提示注册失败
+						System.out.println("该用户名已存在，注册失败！");
+						}
+					}
+				break;
+				
+		    /////////////////////////////////////////登录	
+			case 2:
+				boolean isopen2 = true;//登录状态
+				boolean flag2 = false;//输的用户名是否有效
+				int id=0;//下标
+				while(isopen2==true) {//使处于登录状态
+					
+					while(flag2==false) {//输入登录用户名，错误则一直提示输入
+						System.out.println("请输入用户名：");
+						String login = input.next();//从键盘输入登录用户名
+						//遍历，查找输入用户名有效
+						for(int i=0;i<sub;i++) {
+						if(Name[i].equals(login)) {
+							flag2 = true;//找到了用户名
+						    id = i;//记住在数组中的下标
+							break;
+							}
+						}
+						////输入用户无效
+						if(flag2==false) {
+							System.out.println("用户名错误！");
+						}	
+					}
+					//////////////////////////////////////
+				System.out.println("----ok----\n");
+				System.out.println(" |=====================================|");
+				System.out.println(" |   1.新游戏        |   2.英雄排行榜    |   0.返回        |");
+				System.out.println(" |=====================================|");
+				System.out.print("请选择你要操作的功能序号：");
+				int select2 = input.nextInt();//从键盘输入
+				switch(select2) {
+				////////////新游戏
+				case 1:
+					System.out.println(" |=====================================|");
+					System.out.println(" |   1.刘备        |     2.关羽         |    3.张飞          |");
+					System.out.println(" |=====================================|");
+					System.out.println("请选择你的对手序号：");
+					int select3;
+					while(true) {
+						select3 = input.nextInt();//从键盘输入
+						if(select3>0&&select3<4) {
+							System.out.println("选择好了，你的对手  "+opponent[select3-1]+" 已就位。");//序号-1才是下标
+							break;
+						}
+						else {
+							System.out.println("选择有误，请重新选择：");
+						}
+					}
+					
+					System.out.println(" |=======================================|");
+					System.out.println(" |   1.石头          |      2.布           |     3.剪刀          |");
+					System.out.println(" |=======================================|");
+					int goal = 0;//初始分
+					for(int i=0;i<5;i++) {//出拳五次
+						System.out.print("输入你出拳的序号：");
+						int select4 = input.nextInt();//从键盘输入
+						int index = random.nextInt(3);//对手出拳是随机的，0,1,2的随机整数
+						if(select4>0&&select4<4) {
+							System.out.print("你出的是： "+type[select4-1]+"    "+opponent[select3-1]+"出的是： "+type[index]);
+							if((select4==1&&index==2)||(select4==2&&index==0)||(select4==3&&index==1)) {
+								System.out.println("    --你赢了");
+								score[id]++;//赢了，得1分-在该用户在数组相应位置加分（下标相同）；用户与分数是一一对应的
+							}
+							else if((select4==1&&index==0)||(select4==2&&index==1)||(select4==3&&index==2)) {
+								System.out.println("    --平局");
+							}
+							else {
+								System.out.println("    --你输了 ");
+							}
+						}
+						else {
+							System.out.println("    --出拳无效 ");
+							i--;
+						}
+						
+						
+					}
+					System.out.println("------------结束------------");
+					System.out.println("你的分数是："+score[id]); 
+					System.out.println("已了解，按‘Y’继续"); 
+					String goOn2 = input.next(); 
+					break;
+				//////////英雄排行榜
+				case 2://冒泡排序
+					for(int i=0;i<score.length-1;i++) {
+						//每一轮的比较次数为N-1-i
+						for(int j=0;j<score.length-1-i;j++) {
+							if(score[j]<score[j+1]) {//把分数小的往下沉，做交换
+								int temp = score[j];
+								score[j] = score[j+1];
+								score[j+1] = temp;
+								
+								//同时对应的用户名位置也交换
+								String temp2 = Name[j];
+								Name[j] = Name[j+1];
+								Name[j+1] = temp2;
+							}
+						}
+					}
+					
+					//遍历排好序的，打印出来
+					System.out.println("\n      Top10      ");
+					System.out.println("-----------------------");
+					int no=0;
+					for(int i=0;i<10;i++) {
+						if(Name[i]!=null) {
+							no++;
+							System.out.println(""+no+"|   英雄名："+Name[i]+"\t分数："+score[i]+ "  ");
+						}
+						}
+					System.out.println();
+					System.out.println("已了解，按‘Y’继续"); 
+					String goOn3 = input.next(); 
+					break;
+			    //////////返回
+				case 0:isopen2=false;
+				break;
+				default:System.out.println("你输入有误，请冲洗输入：");
+				}
+			}
+			break;
+			
+			case 3:
+				System.out.println(" |=======================================|");
+				System.out.println(" |   1.石头          |      2.布           |     3.剪刀          |");
+				System.out.println(" |=======================================|");
+				System.out.println(" |布可以击败石头，石头可以击败剪刀，剪刀可以击败布,否则平局  |");
+				System.out.println(" |赢一局得1分，平局得0分,输一局得0分;每局比赛5次机会！       |");
+				System.out.println(" |---------------------------------------|");
+				System.out.println("已了解，按‘Y’继续"); 
+				String goOn = input.next(); 
+				break;
+				
+			case 0:
+				System.out.println("Byebye!");
+				isopen = false;
+				break;
+			default:
+				System.out.println("你输入有误，请重新输入：");
+			}
+			////////////////////////////////
+		}	
+	}
+}
