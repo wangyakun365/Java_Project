@@ -1,0 +1,95 @@
+package com.wang.demo;
+
+public class 士兵出击 {
+	public static void main(String [] args) {
+		Officer officer = new Officer("小坤坤");
+		officer.callToAttack();
+		System.out.println("********");
+		officer.callToAttack(officer.getSoldier()[0]);
+		System.out.println("********");
+		officer.callToAttack(officer.getSoldier()[1]);	
+	}
+}
+
+abstract class Soldier{
+	private String name;
+	
+	//构造方法
+	public Soldier(String name) {
+		this.name = name;
+	}
+	
+	//返回名字
+	public String getName(){
+		return name;
+	}
+	
+	//行动
+	public void action() {
+		start();//准备工作，都一样
+		attack();//攻击，多态
+		end();//结束清理工作，都一样
+	}
+	
+	public void start() {
+		System.out.println("准备迎战！");
+	}
+	
+	public abstract void attack();
+	
+	public void end() {
+		System.out.println("攻击完成！");
+	}
+}
+
+//陆军类
+class LandSoldier extends Soldier{
+	public LandSoldier(String name) {
+		super(name);
+	}
+	public void attack() {
+		System.out.println(getName()+"陆军使用步枪射击！");
+	}
+}
+
+//海军类
+class OceanSoldier extends Soldier{
+	public OceanSoldier(String name) {
+		super(name);
+	}
+	public void attack() {
+		System.out.println(getName()+"海军使用鱼雷射击！");
+	}
+}
+
+class Officer extends Soldier{
+	private Soldier [] soldiers = new Soldier[2];//军官持有两个士兵
+	public Officer(String name) {
+		super(name);
+		soldiers[0] = new LandSoldier("张三");
+		soldiers[1] = new OceanSoldier("李四");
+	}
+	
+	//返回自己的士兵
+	public Soldier[] getSoldier() {
+		return soldiers;
+	}
+	
+	public void attack() {
+		System.out.println(getName()+"军官使用收手枪射击！");
+	}
+	
+	//自己特有的方法，指挥,全部攻击
+	public void callToAttack() {
+		for(int i=0;i<soldiers.length;i++) {
+			soldiers[i].action();
+		}
+		this.action();
+	}
+	
+	//让一个士兵去攻击
+	public void callToAttack(Soldier soldier) {
+		soldier.action();
+	}
+	
+}
